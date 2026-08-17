@@ -1,0 +1,38 @@
+<div class="container mt-4">
+  <h3 class="mb-3">{{ auth.hasRole('ROLE_STUDENT') ? 'My Results' : 'Results' }}</h3>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+
+  @if (loading) {
+    <p>Loading results...</p>
+  } @else if (results.length === 0) {
+    <div class="alert alert-info">No results recorded yet.</div>
+  } @else {
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Course</th>
+            <th>Score</th>
+            <th>Completion Status</th>
+            <th>Last Updated</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (result of results; track result.resultId) {
+            <tr role="button" [routerLink]="['/results', result.resultId]">
+              <td>{{ result.enrollment.student.fullName }}</td>
+              <td>{{ result.enrollment.course.courseName }}</td>
+              <td>{{ result.score / 100 | percent: '1.0-1' }}</td>
+              <td>{{ result.completionStatus }}</td>
+              <td>{{ result.lastUpdated | date: 'short' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

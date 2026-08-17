@@ -1,0 +1,36 @@
+<div class="container mt-4" style="max-width: 600px;">
+  <a routerLink="/results" class="btn btn-link ps-0">&larr; Back to list</a>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+
+  @if (loading) {
+    <p>Loading...</p>
+  } @else if (result) {
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">
+          {{ result.enrollment.student.fullName }} — {{ result.enrollment.course.courseName }}
+        </h4>
+
+        <dl class="row mt-3">
+          <dt class="col-sm-4">Score</dt>
+          <dd class="col-sm-8">{{ result.score / 100 | percent: '1.0-1' }}</dd>
+
+          <dt class="col-sm-4">Completion Status</dt>
+          <dd class="col-sm-8">{{ result.completionStatus }}</dd>
+
+          <dt class="col-sm-4">Enrollment Status</dt>
+          <dd class="col-sm-8">{{ result.enrollment.status | statusLabel }}</dd>
+
+          <dt class="col-sm-4">Enrolled On</dt>
+          <dd class="col-sm-8">{{ result.enrollment.enrollmentDate | date }}</dd>
+
+          <dt class="col-sm-4">Last Updated</dt>
+          <dd class="col-sm-8">{{ result.lastUpdated | date: 'medium' }}</dd>
+        </dl>
+      </div>
+    </div>
+  }
+</div>
