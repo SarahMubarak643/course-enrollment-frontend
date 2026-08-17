@@ -1,0 +1,108 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Courses</h3>
+    @if (canManageCourses()) {
+      <a class="btn btn-primary" routerLink="/courses/new">Add Course</a>
+    }
+  </div>
+
+  <div class="row g-2 mb-3">
+    <div class="col-sm-4">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search by name or code..."
+        [(ngModel)]="keyword"
+        (keyup.enter)="applyFilters()">
+    </div>
+    <div class="col-sm-3">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Filter by category..."
+        [(ngModel)]="category"
+        (keyup.enter)="applyFilters()">
+    </div>
+    <div class="col-sm-2">
+      <select class="form-select" [(ngModel)]="activeFilter" (change)="applyFilters()">
+        <option value="all">All statuses</option>
+        <option value="true">Active only</option>
+        <option value="false">Inactive only</option>
+      </select>
+    </div>
+    <div class="col-sm-2">
+      <select class="form-select" [(ngModel)]="pageSize" (change)="applyFilters()">
+        <option [ngValue]="5">5 / page</option>
+        <option [ngValue]="10">10 / page</option>
+        <option [ngValue]="20">20 / page</option>
+      </select>
+    </div>
+    <div class="col-sm-1">
+      <button class="btn btn-outline-secondary w-100" (click)="applyFilters()">Go</button>
+    </div>
+  </div>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+
+  @if (loading) {
+    <p>Loading courses...</p>
+  } @else if (page && page.content.length === 0) {
+    <div class="alert alert-info">No courses match your search or filter.</div>
+  } @else if (page) {
+    <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th role="button" (click)="toggleSort('courseName')">
+            Name
+            @if (sortColumn === 'courseName') { {{ sortDirection === 'asc' ? '▲' : '▼' }} }
+          </th>
+          <th>Code</th>
+          <th>Category</th>
+          <th role="button" (click)="toggleSort('durationHours')">
+            Duration (hrs)
+            @if (sortColumn === 'durationHours') { {{ sortDirection === 'asc' ? '▲' : '▼' }} }
+          </th>
+          <th>Capacity</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (course of page.content; track course.courseId) {
+          <tr role="button" [routerLink]="['/courses', course.courseId]">
+            <td>{{ course.courseName }}</td>
+            <td>{{ course.courseCode }}</td>
+            <td>{{ course.category }}</td>
+            <td>{{ course.durationHours }}</td>
+            <td>{{ course.capacity }}</td>
+            <td>
+              <span class="badge" [class.bg-success]="course.active" [class.bg-secondary]="!course.active">
+                {{ course.active ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center">
+      <span>
+        Page {{ page.number + 1 }} of {{ page.totalPages }} — {{ page.totalElements }} total records
+      </span>
+
+      <nav>
+        <ul class="pagination mb-0">
+          <li class="page-item" [class.disabled]="page.first">
+            <button class="page-link" (click)="goToPage(page.number - 1)">Previous</button>
+          </li>
+          <li class="page-item" [class.disabled]="page.last">
+            <button class="page-link" (click)="goToPage(page.number + 1)">Next</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  }
+</div>

@@ -1,0 +1,73 @@
+<div class="container mt-4">
+  <a routerLink="/courses" class="btn btn-link ps-0">&larr; Back to list</a>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+
+  @if (loading) {
+    <p>Loading...</p>
+  } @else if (course) {
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start">
+          <h3 class="card-title">{{ course.courseName }}</h3>
+          <span class="badge" [class.bg-success]="course.active" [class.bg-secondary]="!course.active">
+            {{ course.active ? 'Active' : 'Inactive' }}
+          </span>
+        </div>
+
+        <dl class="row mt-3">
+          <dt class="col-sm-3">Course Code</dt>
+          <dd class="col-sm-9">{{ course.courseCode }}</dd>
+
+          <dt class="col-sm-3">Category</dt>
+          <dd class="col-sm-9">{{ course.category }}</dd>
+
+          <dt class="col-sm-3">Description</dt>
+          <dd class="col-sm-9">{{ course.description || '—' }}</dd>
+
+          <dt class="col-sm-3">Duration</dt>
+          <dd class="col-sm-9">{{ course.durationHours }} hours</dd>
+
+          <dt class="col-sm-3">Capacity</dt>
+          <dd class="col-sm-9">{{ course.capacity }} students</dd>
+
+          <dt class="col-sm-3">Created</dt>
+          <dd class="col-sm-9">{{ course.createdAt | date: 'medium' }}</dd>
+        </dl>
+
+        @if (canManageCourses()) {
+          <div class="d-flex gap-2">
+            <a class="btn btn-outline-primary" [routerLink]="['/courses', course.courseId, 'edit']">Edit</a>
+            <button class="btn btn-outline-danger" (click)="deleteCourse()">Delete</button>
+          </div>
+        }
+      </div>
+    </div>
+
+    <h5>Enrollments in this course</h5>
+    <div class="table-responsive">
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Enrolled On</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (enrollment of enrollments; track enrollment.enrollmentId) {
+          <tr [appStatusHighlight]="enrollment.status">
+            <td>{{ enrollment.student.fullName }}</td>
+            <td>{{ enrollment.enrollmentDate | date }}</td>
+            <td>{{ enrollment.status | statusLabel }}</td>
+          </tr>
+        } @empty {
+          <tr><td [attr.colspan]="3">No students enrolled yet.</td></tr>
+        }
+      </tbody>
+    </table>
+    </div>
+  }
+</div>

@@ -1,0 +1,101 @@
+<div class="container mt-4" style="max-width: 600px;">
+  <a routerLink="/courses" class="btn btn-link ps-0">&larr; Back to list</a>
+
+  <h3 class="mb-3">{{ isEditMode ? 'Edit Course' : 'Add Course' }}</h3>
+
+  @if (generalError) {
+    <div class="alert alert-danger">{{ generalError }}</div>
+  }
+
+  @if (loading) {
+    <p>Loading...</p>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="submit()">
+
+      <div class="mb-3">
+        <label class="form-label" for="courseCode">Course Code</label>
+        <input id="courseCode" type="text" class="form-control" formControlName="courseCode"
+               [class.is-invalid]="form.controls.courseCode.invalid && form.controls.courseCode.touched">
+        @if (form.controls.courseCode.touched) {
+          @if (form.controls.courseCode.errors?.['required']) {
+            <div class="invalid-feedback d-block">Course code is required.</div>
+          }
+          @if (form.controls.courseCode.errors?.['blank']) {
+            <div class="invalid-feedback d-block">Course code cannot be only spaces.</div>
+          }
+          @if (form.controls.courseCode.errors?.['pattern']) {
+            <div class="invalid-feedback d-block">Use 2-20 letters/numbers, no spaces (e.g. CS101).</div>
+          }
+          @if (form.controls.courseCode.errors?.['backend']) {
+            <div class="invalid-feedback d-block">{{ form.controls.courseCode.errors?.['backend'] }}</div>
+          }
+        }
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="courseName">Course Name</label>
+        <input id="courseName" type="text" class="form-control" formControlName="courseName"
+               [class.is-invalid]="form.controls.courseName.invalid && form.controls.courseName.touched">
+        @if (form.controls.courseName.touched) {
+          @if (form.controls.courseName.errors?.['required']) {
+            <div class="invalid-feedback d-block">Course name is required.</div>
+          }
+          @if (form.controls.courseName.errors?.['blank']) {
+            <div class="invalid-feedback d-block">Course name cannot be only spaces.</div>
+          }
+          @if (form.controls.courseName.errors?.['backend']) {
+            <div class="invalid-feedback d-block">{{ form.controls.courseName.errors?.['backend'] }}</div>
+          }
+        }
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="category">Category</label>
+        <input id="category" type="text" class="form-control" formControlName="category"
+               [class.is-invalid]="form.controls.category.invalid && form.controls.category.touched">
+        @if (form.controls.category.touched) {
+          @if (form.controls.category.errors?.['required']) {
+            <div class="invalid-feedback d-block">Category is required.</div>
+          }
+          @if (form.controls.category.errors?.['blank']) {
+            <div class="invalid-feedback d-block">Category cannot be only spaces.</div>
+          }
+        }
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="description">Description</label>
+        <textarea id="description" class="form-control" rows="3" formControlName="description"></textarea>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6 mb-3">
+          <label class="form-label" for="durationHours">Duration (hours)</label>
+          <input id="durationHours" type="number" class="form-control" formControlName="durationHours"
+                 [class.is-invalid]="form.controls.durationHours.invalid && form.controls.durationHours.touched">
+          @if (form.controls.durationHours.errors?.['min'] && form.controls.durationHours.touched) {
+            <div class="invalid-feedback d-block">Duration must be at least 1 hour.</div>
+          }
+        </div>
+
+        <div class="col-sm-6 mb-3">
+          <label class="form-label" for="capacity">Capacity</label>
+          <input id="capacity" type="number" class="form-control" formControlName="capacity"
+                 [class.is-invalid]="form.controls.capacity.invalid && form.controls.capacity.touched">
+          @if (form.controls.capacity.errors?.['min'] && form.controls.capacity.touched) {
+            <div class="invalid-feedback d-block">Capacity must be at least 1.</div>
+          }
+        </div>
+      </div>
+
+      <div class="form-check mb-3">
+        <input id="active" type="checkbox" class="form-check-input" formControlName="active">
+        <label class="form-check-label" for="active">Active</label>
+      </div>
+
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid || submitting">
+        {{ submitting ? 'Saving...' : 'Save' }}
+      </button>
+    </form>
+  }
+</div>
