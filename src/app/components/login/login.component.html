@@ -1,0 +1,43 @@
+<div class="container" style="max-width: 400px; margin-top: 4rem;">
+  <div class="card">
+    <div class="card-body">
+      <h3 class="card-title mb-3">Login</h3>
+
+      @if (errorMessage) {
+        <div class="alert alert-danger">{{ errorMessage }}</div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="mb-3">
+          <label class="form-label" for="username">Username</label>
+          <input
+            id="username"
+            type="text"
+            class="form-control"
+            formControlName="username"
+            [class.is-invalid]="form.controls.username.invalid && form.controls.username.touched">
+          @if (form.controls.username.invalid && form.controls.username.touched) {
+            <div class="invalid-feedback">Username is required.</div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            class="form-control"
+            formControlName="password"
+            [class.is-invalid]="form.controls.password.invalid && form.controls.password.touched">
+          @if (form.controls.password.invalid && form.controls.password.touched) {
+            <div class="invalid-feedback">Password is required.</div>
+          }
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100" [disabled]="form.invalid || submitting">
+          {{ submitting ? 'Logging in...' : 'Login' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
