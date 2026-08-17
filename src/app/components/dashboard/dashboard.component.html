@@ -1,0 +1,98 @@
+<div class="container mt-4">
+  <h3 class="mb-4">Dashboard</h3>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+
+  @if (loading) {
+    <p>Loading dashboard...</p>
+  } @else if (auth.hasRole('ROLE_STUDENT')) {
+
+    <!-- Personal dashboard: one real backend endpoint (GET /api/summary/me) -->
+    @if (mySummary) {
+      <div class="row g-3">
+        <div class="col-sm-4">
+          <div class="card text-bg-primary">
+            <div class="card-body">
+              <h6 class="card-title">My Enrollments</h6>
+              <p class="fs-3 mb-0">{{ mySummary.myEnrollmentCount }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="card text-bg-success">
+            <div class="card-body">
+              <h6 class="card-title">Completed</h6>
+              <p class="fs-3 mb-0">{{ mySummary.myCompletedCount }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="card text-bg-info">
+            <div class="card-body">
+              <h6 class="card-title">My Average Score</h6>
+              <p class="fs-3 mb-0">{{ mySummary.myAverageScore | number: '1.1-1' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+  } @else {
+
+    <!-- Full dashboard: two real backend endpoints (INSTRUCTOR/ADMIN) -->
+    @if (summary) {
+      <div class="row g-3 mb-4">
+        <div class="col-sm-4">
+          <div class="card text-bg-primary">
+            <div class="card-body">
+              <h6 class="card-title">Total Students</h6>
+              <p class="fs-3 mb-0">{{ summary.studentCount }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="card text-bg-success">
+            <div class="card-body">
+              <h6 class="card-title">Total Enrollments</h6>
+              <p class="fs-3 mb-0">{{ summary.enrollmentCount }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="card text-bg-info">
+            <div class="card-body">
+              <h6 class="card-title">Average Result Score</h6>
+              <p class="fs-3 mb-0">{{ summary.averageScore | number: '1.1-1' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    <h5>Enrollments per Course</h5>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Course Code</th>
+            <th>Course Name</th>
+            <th>Enrollments</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of courseReport; track row.courseCode) {
+            <tr>
+              <td>{{ row.courseCode }}</td>
+              <td>{{ row.courseName }}</td>
+              <td>{{ row.enrollmentCount }}</td>
+            </tr>
+          } @empty {
+            <tr><td [attr.colspan]="3">No data available.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
