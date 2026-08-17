@@ -1,0 +1,47 @@
+<div class="container mt-4" style="max-width: 500px;">
+  <a routerLink="/enrollments" class="btn btn-link ps-0">&larr; Back to list</a>
+
+  <h3 class="mb-3">New Enrollment</h3>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+
+  @if (loading) {
+    <p>Loading...</p>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="mb-3">
+        <label class="form-label" for="studentId">Student</label>
+        <select id="studentId" class="form-select" formControlName="studentId"
+                [class.is-invalid]="form.controls.studentId.invalid && form.controls.studentId.touched">
+          <option [ngValue]="null">-- Select a student --</option>
+          @for (student of students; track student.studentId) {
+            <option [ngValue]="student.studentId">{{ student.fullName }} ({{ student.studentNumber }})</option>
+          }
+        </select>
+        @if (form.controls.studentId.invalid && form.controls.studentId.touched) {
+          <div class="invalid-feedback d-block">Please select a student.</div>
+        }
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="courseId">Course</label>
+        <select id="courseId" class="form-select" formControlName="courseId"
+                [class.is-invalid]="form.controls.courseId.invalid && form.controls.courseId.touched">
+          <option [ngValue]="null">-- Select a course --</option>
+          @for (course of courses; track course.courseId) {
+            <option [ngValue]="course.courseId">{{ course.courseName }} ({{ course.courseCode }})</option>
+          }
+        </select>
+        @if (form.controls.courseId.invalid && form.controls.courseId.touched) {
+          <div class="invalid-feedback d-block">Please select a course.</div>
+        }
+      </div>
+
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid || submitting">
+        {{ submitting ? 'Enrolling...' : 'Enroll Student' }}
+      </button>
+    </form>
+  }
+</div>

@@ -1,0 +1,41 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>{{ auth.hasRole('ROLE_STUDENT') ? 'My Enrollments' : 'Enrollments' }}</h3>
+    @if (canCreateEnrollments()) {
+      <a class="btn btn-primary" routerLink="/enrollments/new">New Enrollment</a>
+    }
+  </div>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+
+  @if (loading) {
+    <p>Loading enrollments...</p>
+  } @else if (enrollments.length === 0) {
+    <div class="alert alert-info">No enrollments found.</div>
+  } @else {
+    <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Course</th>
+          <th>Enrolled On</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (enrollment of enrollments; track enrollment.enrollmentId) {
+          <tr role="button" [appStatusHighlight]="enrollment.status" [routerLink]="['/enrollments', enrollment.enrollmentId]">
+            <td>{{ enrollment.student.fullName }}</td>
+            <td>{{ enrollment.course.courseName }}</td>
+            <td>{{ enrollment.enrollmentDate | date }}</td>
+            <td>{{ enrollment.status | statusLabel }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    </div>
+  }
+</div>
