@@ -27,7 +27,7 @@
       </thead>
       <tbody>
         @for (enrollment of enrollments; track enrollment.enrollmentId) {
-          <tr role="button" [appStatusHighlight]="enrollment.status" [routerLink]="['/enrollments', enrollment.enrollmentId]">
+          <tr role="button" [appStatusHighlight]="enrollment.status" [routerLink]="['/enrollments', enrollment.enrollmentId, 'workflow']">
             <td>{{ enrollment.student.fullName }}</td>
             <td>{{ enrollment.course.courseName }}</td>
             <td>{{ enrollment.enrollmentDate | date }}</td>

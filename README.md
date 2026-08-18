@@ -66,7 +66,7 @@ enrollments/results/dashboard" for that login.
 | `/courses/:id` | `authGuard` | |
 | `/enrollments` | `authGuard` | All enrollments for `INSTRUCTOR`/`ADMIN`; only the logged-in student's own for `STUDENT` |
 | `/enrollments/new` | `authGuard` + `roleGuard(ROLE_INSTRUCTOR, ROLE_ADMIN)` | |
-| `/enrollments/:id` | `authGuard` | Workflow screen: status transitions + "Record Assessment Result" once `COMPLETED` |
+| `/enrollments/:id/workflow` | `authGuard` | Workflow screen: status transitions + "Record Assessment Result" once `COMPLETED` |
 | `/students` | `authGuard` | `STUDENT` sees only their own profile + enrollments (`GET /api/students/me`); `INSTRUCTOR`/`ADMIN` see the full list |
 | `/students/new`, `/students/:id/edit`, `/students/:id` | `authGuard` + `roleGuard(ROLE_INSTRUCTOR, ROLE_ADMIN)` | |
 | `/results`, `/results/:id` | `authGuard` | List + view (third module). All results for `INSTRUCTOR`/`ADMIN`; only the logged-in student's own for `STUDENT` |

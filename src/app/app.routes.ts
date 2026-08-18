@@ -52,7 +52,7 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { roles: ['ROLE_INSTRUCTOR', 'ROLE_ADMIN'] }
   },
-  { path: 'enrollments/:id', component: EnrollmentWorkflowComponent, canActivate: [authGuard] },
+  { path: 'enrollments/:id/workflow', component: EnrollmentWorkflowComponent, canActivate: [authGuard] },
 
   // Students -- listed/viewed for INSTRUCTOR/ADMIN; a plain STUDENT sees
   // only their own profile (rendered directly on /students, no id needed).

@@ -71,7 +71,7 @@ export class EnrollmentFormComponent implements OnInit {
     this.enrollmentService.enrollStudent(studentId!, courseId!).subscribe({
       next: (enrollment) => {
         this.submitting = false;
-        this.router.navigate(['/enrollments', enrollment.enrollmentId]);
+        this.router.navigate(['/enrollments', enrollment.enrollmentId, 'workflow']);
       },
       error: (err: HttpErrorResponse) => {
         this.submitting = false;
