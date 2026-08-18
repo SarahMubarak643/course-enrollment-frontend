@@ -62,6 +62,7 @@ enrollments/results/dashboard" for that login.
 | `/login` | -- | |
 | `/dashboard` | `authGuard` | Role-aware: full report for `INSTRUCTOR`/`ADMIN`, personal summary for `STUDENT` -- both from real backend endpoints |
 | `/courses` | `authGuard` | Search, 2 filters (category, active), sort on 2 columns (name, duration), pagination |
+| `/courses/search/:keyword`, `/courses/filter/:value` | `authGuard` | Alternate entry points into the same `CourseListComponent` -- `:keyword` seeds the search box, `:value` seeds the category filter. Any further interaction (typing, paging, sorting) normalizes the URL back to `/courses?...` |
 | `/courses/new`, `/courses/:id/edit` | `authGuard` + `roleGuard(ROLE_ADMIN)` | |
 | `/courses/:id` | `authGuard` | |
 | `/enrollments` | `authGuard` | All enrollments for `INSTRUCTOR`/`ADMIN`; only the logged-in student's own for `STUDENT` |
