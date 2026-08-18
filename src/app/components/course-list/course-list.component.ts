@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { combineLatest } from 'rxjs';
 import { CourseService } from '../../services/course.service';
 import { AuthService } from '../../services/auth.service';
 import { Course } from '../../models/course.model';
@@ -41,19 +42,27 @@ export class CourseListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Read initial state from the URL so the list reacts to route/query changes
-    // (e.g. bookmarked search, back button).
-    this.route.queryParamMap.subscribe((params) => {
-      this.keyword = params.get('keyword') ?? '';
-      this.category = params.get('category') ?? '';
-      this.activeFilter = (params.get('active') as 'all' | 'true' | 'false') ?? 'all';
-      this.pageIndex = Number(params.get('page') ?? 0);
-      this.pageSize = Number(params.get('size') ?? 10);
-      this.sortColumn = (params.get('sort') as SortColumn) ?? 'courseName';
-      this.sortDirection = (params.get('dir') as 'asc' | 'desc') ?? 'asc';
+    // Two ways to arrive at this component with an initial filter:
+    //   /courses?keyword=..&category=..           (query params -- the
+    //     existing mechanism, also how this component updates itself
+    //     after every search/filter/sort/page change)
+    //   /courses/search/:keyword or /courses/filter/:value (route path
+    //     params -- required entry-point routes; :value seeds the
+    //     category filter, the free-text filter this project uses)
+    // Query params win if both happen to be present.
+    combineLatest([this.route.paramMap, this.route.queryParamMap]).subscribe(
+      ([pathParams, queryParams]) => {
+        this.keyword = queryParams.get('keyword') ?? pathParams.get('keyword') ?? '';
+        this.category = queryParams.get('category') ?? pathParams.get('value') ?? '';
+        this.activeFilter = (queryParams.get('active') as 'all' | 'true' | 'false') ?? 'all';
+        this.pageIndex = Number(queryParams.get('page') ?? 0);
+        this.pageSize = Number(queryParams.get('size') ?? 10);
+        this.sortColumn = (queryParams.get('sort') as SortColumn) ?? 'courseName';
+        this.sortDirection = (queryParams.get('dir') as 'asc' | 'desc') ?? 'asc';
 
-      this.loadCourses();
-    });
+        this.loadCourses();
+      }
+    );
   }
 
   private loadCourses(): void {
@@ -104,8 +113,7 @@ export class CourseListComponent implements OnInit {
   }
 
   private updateUrl(overrides: Record<string, unknown>): void {
-    this.router.navigate([], {
-      relativeTo: this.route,
+    this.router.navigate(['/courses'], {
       queryParams: {
         keyword: this.keyword || null,
         category: this.category || null,
@@ -115,8 +123,7 @@ export class CourseListComponent implements OnInit {
         sort: this.sortColumn,
         dir: this.sortDirection,
         ...overrides
-      },
-      queryParamsHandling: 'merge'
+      }
     });
   }
 

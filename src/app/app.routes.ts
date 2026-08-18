@@ -41,6 +41,13 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { roles: ['ROLE_ADMIN'] }
   },
+
+  // Required entry-point routes for the main list: reuse the same
+  // CourseListComponent and the same query-param-driven state as
+  // /courses -- these just seed the initial keyword/category filter.
+  { path: 'courses/search/:keyword', component: CourseListComponent, canActivate: [authGuard] },
+  { path: 'courses/filter/:value', component: CourseListComponent, canActivate: [authGuard] },
+
   { path: 'courses/:id', component: CourseDetailComponent, canActivate: [authGuard] },
 
   // Enrollments -- workflow module. Everyone logged in can view;
