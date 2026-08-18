@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 import { CourseService } from '../../services/course.service';
 import { AuthService } from '../../services/auth.service';
 import { Course } from '../../models/course.model';
 import { Page } from '../../models/page.model';
+import { ApiError } from '../../models/api-error.model';
 
 type SortColumn = 'courseName' | 'durationHours';
 
@@ -120,5 +122,23 @@ export class CourseListComponent implements OnInit {
 
   canManageCourses(): boolean {
     return this.auth.hasRole('ROLE_ADMIN');
+  }
+
+  // Delete action on the list row itself (in addition to the detail page).
+  // Stops the row-click navigation so it doesn't also open the detail page.
+  deleteCourse(event: Event, course: Course): void {
+    event.stopPropagation();
+
+    if (!confirm(`Delete course "${course.courseName}"? This cannot be undone.`)) {
+      return;
+    }
+
+    this.courseService.deleteCourse(course.courseId).subscribe({
+      next: () => this.loadCourses(),
+      error: (err: HttpErrorResponse) => {
+        const body = err.error as ApiError | undefined;
+        this.errorMessage = body?.error ?? 'Could not delete this course.';
+      }
+    });
   }
 }

@@ -67,6 +67,9 @@
           </th>
           <th>Capacity</th>
           <th>Status</th>
+          @if (canManageCourses()) {
+            <th>Actions</th>
+          }
         </tr>
       </thead>
       <tbody>
@@ -82,6 +85,11 @@
                 {{ course.active ? 'Active' : 'Inactive' }}
               </span>
             </td>
+            @if (canManageCourses()) {
+              <td>
+                <button class="btn btn-sm btn-outline-danger" (click)="deleteCourse($event, course)">Delete</button>
+              </td>
+            }
           </tr>
         }
       </tbody>
