@@ -12,17 +12,10 @@ import { ApiError } from '../../models/api-error.model';
 import { StatusLabelPipe } from '../../pipes/status-label.pipe';
 import { notBlankValidator } from '../../validators/not-blank.validator';
 
-// Mirrors courseEnrollement.example.demo.entity.EnrollmentStatus.
-// This is only used to decide which buttons to SHOW — the backend is
-// still the one that actually enforces which transitions are valid.
-const ALLOWED_TRANSITIONS: Record<EnrollmentStatus, EnrollmentStatus[]> = {
-  ENROLLED: ['APPROVED', 'REJECTED', 'WITHDRAWN'],
-  APPROVED: ['COMPLETED', 'WITHDRAWN'],
-  REJECTED: [],
-  WITHDRAWN: [],
-  COMPLETED: []
-};
-
+// REJECTED/WITHDRAWN both need a reason box before confirming -- this is
+// a UI-only detail (which statuses show a text box), not a workflow rule,
+// so it's fine to keep here. The actual list of *valid* next statuses
+// comes from enrollment.availableActions, computed by the backend.
 const STATUSES_REQUIRING_REASON: EnrollmentStatus[] = ['REJECTED', 'WITHDRAWN'];
 
 @Component({
@@ -105,10 +98,7 @@ export class EnrollmentWorkflowComponent implements OnInit {
   }
 
   get availableActions(): EnrollmentStatus[] {
-    if (!this.enrollment) {
-      return [];
-    }
-    return ALLOWED_TRANSITIONS[this.enrollment.status] ?? [];
+    return this.enrollment?.availableActions ?? [];
   }
 
   canManageWorkflow(): boolean {

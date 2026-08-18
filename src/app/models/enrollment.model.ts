@@ -19,4 +19,7 @@ export interface Enrollment {
   enrollmentDate: string;
   status: EnrollmentStatus;
   reason: string | null;
+  // Computed by the backend from EnrollmentStatus -- the single source
+  // of truth for which transitions are valid from the current status.
+  availableActions: EnrollmentStatus[];
 }
