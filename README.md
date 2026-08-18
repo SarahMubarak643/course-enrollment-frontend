@@ -47,7 +47,7 @@ Same three accounts as the backend's `data.sql` (password `password123` for all)
 
 | Username | Role | Can do |
 |---|---|---|
-| `student1` | `ROLE_STUDENT` | View courses. View **only their own** enrollments and results (`GET /api/enrollments/me`, `GET /api/results/me`). Sees a personal dashboard. Cannot create/edit/delete anything or run workflow actions. |
+| `student1` | `ROLE_STUDENT` | View courses. View **only their own profile** (`GET /api/students/me`), **only their own** enrollments and results (`GET /api/enrollments/me`, `GET /api/results/me`). Sees a personal dashboard. Cannot see other students, create/edit/delete anything, or run workflow actions. |
 | `instructor1` | `ROLE_INSTRUCTOR` | Everything a student can, plus: create/edit students, create enrollments, run all workflow transitions (approve/reject/withdraw/complete), record assessment results, view the full dashboard. Cannot create/edit/delete courses. |
 | `admin1` | `ROLE_ADMIN` | Everything, including creating/editing/deleting courses. |
 
@@ -67,8 +67,8 @@ enrollments/results/dashboard" for that login.
 | `/enrollments` | `authGuard` | All enrollments for `INSTRUCTOR`/`ADMIN`; only the logged-in student's own for `STUDENT` |
 | `/enrollments/new` | `authGuard` + `roleGuard(ROLE_INSTRUCTOR, ROLE_ADMIN)` | |
 | `/enrollments/:id` | `authGuard` | Workflow screen: status transitions + "Record Assessment Result" once `COMPLETED` |
-| `/students`, `/students/:id` | `authGuard` | List + view (all roles) |
-| `/students/new`, `/students/:id/edit` | `authGuard` + `roleGuard(ROLE_INSTRUCTOR, ROLE_ADMIN)` | |
+| `/students` | `authGuard` | `STUDENT` sees only their own profile + enrollments (`GET /api/students/me`); `INSTRUCTOR`/`ADMIN` see the full list |
+| `/students/new`, `/students/:id/edit`, `/students/:id` | `authGuard` + `roleGuard(ROLE_INSTRUCTOR, ROLE_ADMIN)` | |
 | `/results`, `/results/:id` | `authGuard` | List + view (third module). All results for `INSTRUCTOR`/`ADMIN`; only the logged-in student's own for `STUDENT` |
 | `/access-denied`, `/**` | -- | |
 
@@ -81,7 +81,7 @@ the UI.
 ## Modules implemented
 
 1. **Courses** -- full CRUD (list/search/filter/sort/paginate, view, create, edit, delete). Main module.
-2. **Students** -- listed, viewed, and create/edit for `INSTRUCTOR`/`ADMIN`.
+2. **Students** -- listed and viewed for `INSTRUCTOR`/`ADMIN` (who can also create/edit); `STUDENT` sees only their own profile.
 3. **Results** -- listed and viewed, personally scoped for `STUDENT`.
 4. **Enrollments** -- the workflow module, personally scoped for `STUDENT`, plus creating a new enrollment.
 

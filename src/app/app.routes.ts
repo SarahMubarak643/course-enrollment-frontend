@@ -54,8 +54,9 @@ export const routes: Routes = [
   },
   { path: 'enrollments/:id', component: EnrollmentWorkflowComponent, canActivate: [authGuard] },
 
-  // Students -- listed/viewed for everyone; ADMIN/INSTRUCTOR can also
-  // create/edit (mirrors SecurityConfig's write rule for /api/students/**).
+  // Students -- listed/viewed for INSTRUCTOR/ADMIN; a plain STUDENT sees
+  // only their own profile (rendered directly on /students, no id needed).
+  // ADMIN/INSTRUCTOR can also create/edit (mirrors SecurityConfig's write rule).
   { path: 'students', component: StudentListComponent, canActivate: [authGuard] },
   {
     path: 'students/new',
@@ -69,7 +70,12 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { roles: ['ROLE_INSTRUCTOR', 'ROLE_ADMIN'] }
   },
-  { path: 'students/:id', component: StudentDetailComponent, canActivate: [authGuard] },
+  {
+    path: 'students/:id',
+    component: StudentDetailComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ROLE_INSTRUCTOR', 'ROLE_ADMIN'] }
+  },
 
   // Results -- third module, listed and viewed.
   { path: 'results', component: ResultListComponent, canActivate: [authGuard] },

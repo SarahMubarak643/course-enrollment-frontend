@@ -21,6 +21,11 @@ export class StudentService {
     return this.http.get<Student>(`${this.baseUrl}/${id}`);
   }
 
+  // The logged-in STUDENT's own profile only.
+  getMyProfile(): Observable<Student> {
+    return this.http.get<Student>(`${this.baseUrl}/me`);
+  }
+
   createStudent(student: StudentRequest): Observable<Student> {
     return this.http.post<Student>(this.baseUrl, student);
   }
