@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { StudentService } from '../../services/student.service';
 import { EnrollmentService } from '../../services/enrollment.service';
+import { AuthService } from '../../services/auth.service';
 import { Student } from '../../models/student.model';
 import { Enrollment } from '../../models/enrollment.model';
 import { StatusLabelPipe } from '../../pipes/status-label.pipe';
@@ -24,7 +25,8 @@ export class StudentDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private studentService: StudentService,
-    private enrollmentService: EnrollmentService
+    private enrollmentService: EnrollmentService,
+    public auth: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -47,5 +49,9 @@ export class StudentDetailComponent implements OnInit {
         error: () => {}
       });
     });
+  }
+
+  canManageStudents(): boolean {
+    return this.auth.hasRole('ROLE_INSTRUCTOR', 'ROLE_ADMIN');
   }
 }

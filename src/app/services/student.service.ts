@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Student } from '../models/student.model';
+import { Student, StudentRequest } from '../models/student.model';
 
 @Injectable({ providedIn: 'root' })
 export class StudentService {
@@ -19,5 +19,13 @@ export class StudentService {
 
   getStudentById(id: number): Observable<Student> {
     return this.http.get<Student>(`${this.baseUrl}/${id}`);
+  }
+
+  createStudent(student: StudentRequest): Observable<Student> {
+    return this.http.post<Student>(this.baseUrl, student);
+  }
+
+  updateStudent(id: number, student: StudentRequest): Observable<Student> {
+    return this.http.put<Student>(`${this.baseUrl}/${id}`, student);
   }
 }

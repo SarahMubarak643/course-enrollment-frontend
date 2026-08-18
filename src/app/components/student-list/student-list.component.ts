@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { StudentService } from '../../services/student.service';
+import { AuthService } from '../../services/auth.service';
 import { Student } from '../../models/student.model';
 
 @Component({
@@ -16,7 +17,7 @@ export class StudentListComponent implements OnInit {
   loading = true;
   errorMessage = '';
 
-  constructor(private studentService: StudentService) {}
+  constructor(private studentService: StudentService, public auth: AuthService) {}
 
   ngOnInit(): void {
     this.studentService.getAllStudents().subscribe({
@@ -29,5 +30,9 @@ export class StudentListComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  canManageStudents(): boolean {
+    return this.auth.hasRole('ROLE_INSTRUCTOR', 'ROLE_ADMIN');
   }
 }

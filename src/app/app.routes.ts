@@ -9,6 +9,7 @@ import { CourseDetailComponent } from './components/course-detail/course-detail.
 import { CourseFormComponent } from './components/course-form/course-form.component';
 import { StudentListComponent } from './components/student-list/student-list.component';
 import { StudentDetailComponent } from './components/student-detail/student-detail.component';
+import { StudentFormComponent } from './components/student-form/student-form.component';
 import { ResultListComponent } from './components/result-list/result-list.component';
 import { ResultDetailComponent } from './components/result-detail/result-detail.component';
 import { EnrollmentListComponent } from './components/enrollment-list/enrollment-list.component';
@@ -53,8 +54,21 @@ export const routes: Routes = [
   },
   { path: 'enrollments/:id', component: EnrollmentWorkflowComponent, canActivate: [authGuard] },
 
-  // Students -- second module, listed and viewed.
+  // Students -- listed/viewed for everyone; ADMIN/INSTRUCTOR can also
+  // create/edit (mirrors SecurityConfig's write rule for /api/students/**).
   { path: 'students', component: StudentListComponent, canActivate: [authGuard] },
+  {
+    path: 'students/new',
+    component: StudentFormComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ROLE_INSTRUCTOR', 'ROLE_ADMIN'] }
+  },
+  {
+    path: 'students/:id/edit',
+    component: StudentFormComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ROLE_INSTRUCTOR', 'ROLE_ADMIN'] }
+  },
   { path: 'students/:id', component: StudentDetailComponent, canActivate: [authGuard] },
 
   // Results -- third module, listed and viewed.
