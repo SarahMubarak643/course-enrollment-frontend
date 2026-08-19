@@ -18,12 +18,11 @@ export class StudentFormComponent implements OnInit {
 
   private fb = inject(FormBuilder);
 
-  studentId: number | null = null; // null => create mode, set => edit mode
+  studentId: number | null = null; 
   submitting = false;
   loading = false;
   generalError = '';
 
-  // Backend requires the student number to start with "STU" (StudentValidator.java).
   form = this.fb.group({
     studentNumber: ['', [Validators.required, notBlankValidator(), Validators.pattern(/^STU[A-Za-z0-9]*$/), Validators.maxLength(50)]],
     fullName: ['', [Validators.required, notBlankValidator(), Validators.maxLength(100)]],
@@ -90,8 +89,7 @@ export class StudentFormComponent implements OnInit {
     const body = err.error as ApiError | undefined;
 
     if (err.status === 400 && body) {
-      // Field-level validation errors from MethodArgumentNotValidException
-      // and the custom StudentValidator, e.g. { "studentNumber": "..." }
+      // Field level validation errors 
       for (const field of Object.keys(body)) {
         if (field !== 'error' && this.form.contains(field)) {
           this.form.get(field)?.setErrors({ backend: body[field] });
@@ -101,7 +99,7 @@ export class StudentFormComponent implements OnInit {
         this.generalError = body['error'];
       }
     } else if (body?.error) {
-      // 409 conflict (duplicate student number/email)
+      // 409 conflict 
       this.generalError = body.error;
     } else {
       this.generalError = 'Something went wrong while saving this student.';

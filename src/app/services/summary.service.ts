@@ -11,17 +11,14 @@ export class SummaryService {
 
   constructor(private http: HttpClient) {}
 
-  // Dashboard report 1: overall counts + average score. INSTRUCTOR/ADMIN only.
   getSummary(): Observable<Summary> {
     return this.http.get<Summary>(this.baseUrl);
   }
 
-  // Dashboard report 2: enrollment count per course. INSTRUCTOR/ADMIN only.
   getEnrollmentsByCourse(): Observable<CourseEnrollmentCount[]> {
     return this.http.get<CourseEnrollmentCount[]>(`${this.baseUrl}/courses`);
   }
 
-  // Personal dashboard for the logged-in STUDENT.
   getMySummary(): Observable<MySummary> {
     return this.http.get<MySummary>(`${this.baseUrl}/me`);
   }

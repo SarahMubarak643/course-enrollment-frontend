@@ -17,10 +17,8 @@ import { StatusHighlightDirective } from '../../directives/status-highlight.dire
 })
 export class StudentListComponent implements OnInit {
 
-  // INSTRUCTOR/ADMIN view: the full list.
   students: Student[] = [];
 
-  // STUDENT view: only their own profile + enrollments.
   myProfile: Student | null = null;
   myEnrollments: Enrollment[] = [];
 

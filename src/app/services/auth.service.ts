@@ -9,18 +9,12 @@ const STORAGE_KEY = 'auth';
 interface StoredAuth {
   username: string;
   role: Role;
-  // Backend uses HTTP Basic auth, so the interceptor needs the raw
-  // credentials to build the Authorization header on every request.
-  // This is the simplest approach for a Basic-Auth backend; a real
-  // production app would use a token instead (see README limitations).
-  credentials: string; // base64("username:password")
+  credentials: string; 
 }
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  // Holds the logged-in user so components can react to login/logout
-  // without re-reading storage everywhere.
   currentUser = signal<{ username: string; role: Role } | null>(this.readStoredUser());
 
   constructor(private http: HttpClient) {}
@@ -57,7 +51,6 @@ export class AuthService {
     return user !== null && roles.includes(user.role);
   }
 
-  // Used by the HTTP interceptor to attach the Authorization header.
   getAuthHeader(): string | null {
     const stored = this.readStoredAuth();
     return stored ? `Basic ${stored.credentials}` : null;

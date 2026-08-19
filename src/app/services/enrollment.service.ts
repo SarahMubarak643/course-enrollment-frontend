@@ -27,8 +27,6 @@ export class EnrollmentService {
     return this.http.get<Enrollment[]>(`${this.baseUrl}/course/${courseId}`);
   }
 
-  // The logged-in STUDENT's own enrollments only. Backend resolves the
-  // student from the authenticated user, so no id is sent from here.
   getMyEnrollments(): Observable<Enrollment[]> {
     return this.http.get<Enrollment[]>(`${this.baseUrl}/me`);
   }
@@ -41,8 +39,6 @@ export class EnrollmentService {
     return this.http.post<Enrollment>(this.baseUrl, null, { params });
   }
 
-  // Workflow transition. reason is required by the backend when
-  // status is REJECTED or WITHDRAWN.
   updateStatus(id: number, status: string, reason?: string): Observable<Enrollment> {
     let params = new HttpParams().set('status', status);
 

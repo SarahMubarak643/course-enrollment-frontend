@@ -1,8 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-// Converts a backend status like "ENROLLED" or "WITHDRAWN" into a
-// friendlier label: "Enrolled", "Withdrawn". Used in the enrollment
-// list/detail/workflow pages.
 @Pipe({
   name: 'statusLabel',
   standalone: true

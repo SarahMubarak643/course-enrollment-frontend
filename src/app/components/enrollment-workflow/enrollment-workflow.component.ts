@@ -12,10 +12,6 @@ import { ApiError } from '../../models/api-error.model';
 import { StatusLabelPipe } from '../../pipes/status-label.pipe';
 import { notBlankValidator } from '../../validators/not-blank.validator';
 
-// REJECTED/WITHDRAWN both need a reason box before confirming -- this is
-// a UI-only detail (which statuses show a text box), not a workflow rule,
-// so it's fine to keep here. The actual list of *valid* next statuses
-// comes from enrollment.availableActions, computed by the backend.
 const STATUSES_REQUIRING_REASON: EnrollmentStatus[] = ['REJECTED', 'WITHDRAWN'];
 
 @Component({
@@ -33,11 +29,9 @@ export class EnrollmentWorkflowComponent implements OnInit {
   errorMessage = '';
   submitting = false;
 
-  // Set while the user is filling in a reason for REJECTED/WITHDRAWN.
   pendingStatus: EnrollmentStatus | null = null;
   reason = '';
 
-  // "Record Assessment Result" panel state -- only relevant once status is COMPLETED.
   existingResult: Result | null = null;
   checkingResult = false;
   showResultForm = false;
@@ -81,8 +75,6 @@ export class EnrollmentWorkflowComponent implements OnInit {
     });
   }
 
-  // The backend returns 404 when no result has been recorded yet for
-  // this enrollment -- that is an expected, normal outcome here, not an error.
   private checkExistingResult(enrollmentId: number): void {
     this.checkingResult = true;
     this.resultService.getResultByEnrollment(enrollmentId).subscribe({
@@ -105,12 +97,10 @@ export class EnrollmentWorkflowComponent implements OnInit {
     return this.auth.hasRole('ROLE_INSTRUCTOR', 'ROLE_ADMIN');
   }
 
-  // Same role rule the backend enforces for POST /api/results.
   canRecordResult(): boolean {
     return this.auth.hasRole('ROLE_INSTRUCTOR', 'ROLE_ADMIN');
   }
 
-  // For REJECTED/WITHDRAWN, first ask for a reason. For others, confirm and go.
   requestTransition(status: EnrollmentStatus): void {
     if (STATUSES_REQUIRING_REASON.includes(status)) {
       this.pendingStatus = status;

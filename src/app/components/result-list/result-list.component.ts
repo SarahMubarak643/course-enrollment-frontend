@@ -20,7 +20,7 @@ export class ResultListComponent implements OnInit {
   constructor(private resultService: ResultService, public auth: AuthService) {}
 
   ngOnInit(): void {
-    // STUDENT sees only their own results; INSTRUCTOR/ADMIN see everyone's.
+    
     const results$ = this.auth.hasRole('ROLE_STUDENT')
       ? this.resultService.getMyResults()
       : this.resultService.getAllResults();

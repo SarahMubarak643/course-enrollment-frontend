@@ -11,8 +11,6 @@ export class StudentService {
 
   constructor(private http: HttpClient) {}
 
-  // Used by the Student list page and to populate the student
-  // dropdown on the Enrollment workflow page.
   getAllStudents(): Observable<Student[]> {
     return this.http.get<Student[]>(this.baseUrl);
   }
@@ -21,7 +19,6 @@ export class StudentService {
     return this.http.get<Student>(`${this.baseUrl}/${id}`);
   }
 
-  // The logged-in STUDENT's own profile only.
   getMyProfile(): Observable<Student> {
     return this.http.get<Student>(`${this.baseUrl}/me`);
   }

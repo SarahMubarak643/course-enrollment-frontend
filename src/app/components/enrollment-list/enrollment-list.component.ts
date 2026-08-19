@@ -22,7 +22,6 @@ export class EnrollmentListComponent implements OnInit {
   constructor(private enrollmentService: EnrollmentService, public auth: AuthService) {}
 
   ngOnInit(): void {
-    // STUDENT sees only their own enrollments; INSTRUCTOR/ADMIN see everyone's.
     const enrollments$ = this.auth.hasRole('ROLE_STUDENT')
       ? this.enrollmentService.getMyEnrollments()
       : this.enrollmentService.getAllEnrollments();

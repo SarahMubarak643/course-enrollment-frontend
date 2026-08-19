@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit ,inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -24,13 +24,11 @@ export class CourseDetailComponent implements OnInit {
   loading = true;
   errorMessage = '';
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private courseService: CourseService,
-    private enrollmentService: EnrollmentService,
-    public auth: AuthService
-  ) {}
+  private route =inject( ActivatedRoute);
+  private router=inject( Router);
+  private courseService=inject( CourseService);
+  private enrollmentService=inject( EnrollmentService);
+  public auth=inject( AuthService);
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
@@ -55,7 +53,7 @@ export class CourseDetailComponent implements OnInit {
 
     this.enrollmentService.getEnrollmentsByCourse(id).subscribe({
       next: (data) => (this.enrollments = data),
-      error: () => {} // related data is a nice-to-have; ignore failures here
+      error: () => {} // enrollment data is extra data 
     });
   }
 

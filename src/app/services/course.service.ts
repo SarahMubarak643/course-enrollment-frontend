@@ -12,12 +12,10 @@ export class CourseService {
 
   constructor(private http: HttpClient) {}
 
-  // Main list page: pagination + sorting + keyword search + filters,
-  // all handled by the backend (GET /api/courses/page).
   getCoursesPage(options: {
     page: number;
     size: number;
-    sort?: string;       // e.g. "courseName,asc"
+    sort?: string;       
     keyword?: string;
     category?: string;
     active?: boolean;
@@ -43,7 +41,6 @@ export class CourseService {
     return this.http.get<Page<Course>>(`${this.baseUrl}/page`, { params });
   }
 
-  // Used to populate the course dropdown on the Enrollment workflow page.
   getAllCourses(): Observable<Course[]> {
     return this.http.get<Course[]>(this.baseUrl);
   }

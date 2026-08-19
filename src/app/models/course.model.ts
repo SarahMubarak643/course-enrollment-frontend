@@ -1,4 +1,3 @@
-// Matches courseEnrollement.example.demo.entity.Course
 export interface Course {
   courseId: number;
   courseCode: string;
@@ -11,8 +10,6 @@ export interface Course {
   createdAt: string;
 }
 
-// Fields sent to POST/PUT /api/courses — the same shape minus the
-// server-generated id and createdAt.
 export interface CourseRequest {
   courseCode: string;
   courseName: string;

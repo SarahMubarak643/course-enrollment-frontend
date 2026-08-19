@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { inject } from '@angular/core';
+import { Component, OnInit,inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -41,7 +40,7 @@ export class EnrollmentFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Dropdown values come from the backend, never hardcoded.
+    
     forkJoin({
       students: this.studentService.getAllStudents(),
       courses: this.courseService.getAllCourses()
@@ -68,6 +67,7 @@ export class EnrollmentFormComponent implements OnInit {
     this.submitting = true;
     this.errorMessage = '';
 
+    //send the enrollent to the backend.
     this.enrollmentService.enrollStudent(studentId!, courseId!).subscribe({
       next: (enrollment) => {
         this.submitting = false;

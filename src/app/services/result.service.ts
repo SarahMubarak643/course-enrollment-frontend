@@ -19,19 +19,14 @@ export class ResultService {
     return this.http.get<Result>(`${this.baseUrl}/${id}`);
   }
 
-  // The logged-in STUDENT's own results only.
   getMyResults(): Observable<Result[]> {
     return this.http.get<Result[]>(`${this.baseUrl}/me`);
   }
 
-  // Used by the workflow screen to check whether a result has already
-  // been recorded for a given (completed) enrollment. The backend
-  // returns 404 when none exists yet -- that's a normal, expected case.
   getResultByEnrollment(enrollmentId: number): Observable<Result> {
     return this.http.get<Result>(`${this.baseUrl}/enrollment/${enrollmentId}`);
   }
 
-  // Records an assessment result for a completed enrollment.
   createResult(request: ResultRequest): Observable<Result> {
     const params = new HttpParams()
       .set('enrollmentId', request.enrollmentId)

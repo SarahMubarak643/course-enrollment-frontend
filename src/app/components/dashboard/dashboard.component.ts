@@ -12,11 +12,9 @@ import { Summary, MySummary, CourseEnrollmentCount } from '../../models/summary.
 })
 export class DashboardComponent implements OnInit {
 
-  // Full dashboard (INSTRUCTOR/ADMIN)
   summary: Summary | null = null;
   courseReport: CourseEnrollmentCount[] = [];
 
-  // Personal dashboard (STUDENT)
   mySummary: MySummary | null = null;
 
   loading = true;
@@ -28,7 +26,7 @@ export class DashboardComponent implements OnInit {
     this.loading = true;
 
     if (this.auth.hasRole('ROLE_STUDENT')) {
-      // Personal dashboard: one real backend endpoint, aggregate values only.
+
       this.summaryService.getMySummary().subscribe({
         next: (data) => {
           this.mySummary = data;
@@ -42,7 +40,6 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
-    // Full dashboard: report 1 (overall counts) + report 2 (per-course).
     this.summaryService.getSummary().subscribe({
       next: (data) => (this.summary = data),
       error: () => (this.errorMessage = 'Could not load the summary report.')

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit ,inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -25,7 +25,6 @@ export class CourseListComponent implements OnInit {
   loading = true;
   errorMessage = '';
 
-  // Filter / search / sort / pagination state, all sent to the backend.
   keyword = '';
   category = '';
   activeFilter: 'all' | 'true' | 'false' = 'all';
@@ -34,22 +33,15 @@ export class CourseListComponent implements OnInit {
   pageIndex = 0;
   pageSize = 10;
 
-  constructor(
-    private courseService: CourseService,
-    public auth: AuthService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
+
+  private courseService=inject( CourseService);
+  public auth=inject( AuthService);
+  private route=inject( ActivatedRoute);
+  private router=inject( Router);
+
 
   ngOnInit(): void {
-    // Two ways to arrive at this component with an initial filter:
-    //   /courses?keyword=..&category=..           (query params -- the
-    //     existing mechanism, also how this component updates itself
-    //     after every search/filter/sort/page change)
-    //   /courses/search/:keyword or /courses/filter/:value (route path
-    //     params -- required entry-point routes; :value seeds the
-    //     category filter, the free-text filter this project uses)
-    // Query params win if both happen to be present.
+
     combineLatest([this.route.paramMap, this.route.queryParamMap]).subscribe(
       ([pathParams, queryParams]) => {
         this.keyword = queryParams.get('keyword') ?? pathParams.get('keyword') ?? '';
@@ -90,7 +82,6 @@ export class CourseListComponent implements OnInit {
       });
   }
 
-  // Any new search/filter/page-size selection resets to page 0.
   applyFilters(): void {
     this.updateUrl({ page: 0 });
   }
@@ -131,8 +122,6 @@ export class CourseListComponent implements OnInit {
     return this.auth.hasRole('ROLE_ADMIN');
   }
 
-  // Delete action on the list row itself (in addition to the detail page).
-  // Stops the row-click navigation so it doesn't also open the detail page.
   deleteCourse(event: Event, course: Course): void {
     event.stopPropagation();
 

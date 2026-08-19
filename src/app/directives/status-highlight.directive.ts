@@ -1,11 +1,5 @@
 import { Directive, Input, HostBinding } from '@angular/core';
 
-// Highlights an element (a table row, a card, a badge) based on the
-// enrollment status passed in. Used on the enrollment list/detail pages
-// so the current status is visible at a glance, without any extra CSS
-// classes written by hand in every template.
-//
-// Usage: <tr [appStatusHighlight]="enrollment.status">
 @Directive({
   selector: '[appStatusHighlight]',
   standalone: true

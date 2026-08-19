@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { inject } from '@angular/core';
+import { Component, OnInit ,inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -19,7 +18,7 @@ export class CourseFormComponent implements OnInit {
 
   private fb = inject(FormBuilder);
 
-  courseId: number | null = null; // null => create mode, set => edit mode
+  courseId: number | null = null; 
   submitting = false;
   loading = false;
   generalError = '';
@@ -34,11 +33,9 @@ export class CourseFormComponent implements OnInit {
     active: [true, [Validators.required]]
   });
 
-  constructor(
-    private courseService: CourseService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
+  private courseService =inject(CourseService);
+  private route=inject(ActivatedRoute);
+  private router=inject(Router);
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -93,8 +90,7 @@ export class CourseFormComponent implements OnInit {
     const body = err.error as ApiError | undefined;
 
     if (err.status === 400 && body) {
-      // Field-level validation errors from MethodArgumentNotValidException:
-      // { "courseName": "Course name is required", ... }
+      // Field-level validation errors 
       for (const field of Object.keys(body)) {
         if (field !== 'error' && this.form.contains(field)) {
           this.form.get(field)?.setErrors({ backend: body[field] });
@@ -104,7 +100,7 @@ export class CourseFormComponent implements OnInit {
         this.generalError = body['error'];
       }
     } else if (body?.error) {
-      // 409 conflict (duplicate course code) or other IllegalArgumentException
+      // 409 conflict 
       this.generalError = body.error;
     } else {
       this.generalError = 'Something went wrong while saving this course.';
